@@ -16,7 +16,9 @@ A simple Neovim plugin for generating and editing text using OpenAI and GPT.
 
 For vim-plug, add this to your init.vim:
 
-`Plug 'aduros/ai.vim'`
+```vim
+Plug 'aduros/ai.vim'
+```
 
 Make sure you have an environment variable called `$OPENAI_API_KEY` which you can [generate
 here](https://beta.openai.com/account/api-keys). You'll also need `curl` installed.
@@ -40,6 +42,7 @@ function capitalize (str: string): string {<Ctrl-A>
 
 ```
 // Calculate hashcode from a string<Ctrl-A>
+```
 
 ```
 List of planets in Star Wars:<Ctrl-A>
