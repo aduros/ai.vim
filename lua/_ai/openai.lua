@@ -38,7 +38,7 @@ function M.call (endpoint, body, on_result)
         "-d", vim.json.encode(body),
     }
 
-    print("Calling API:", endpoint, vim.json.encode(body))
+    -- print("Calling API:", endpoint, vim.json.encode(body))
     exec("curl", curl_args, function (output)
         local json = vim.json.decode(output)
         if json.error then

@@ -25,9 +25,7 @@ here](https://beta.openai.com/account/api-keys). You'll also need `curl` install
 
 ## Bugs, TODOs
 
-- Needs better feedback while a request is loading.
-- Error handling isn't great.
-- Support operating on partial lines, and custom motions?
+- Error handling needs improvement.
 - Documentation.
 
 PRs are welcome!
@@ -37,19 +35,23 @@ PRs are welcome!
 ### Completion
 
 ```
-function capitalize (str: string): string {<Ctrl-A>
+function capitalize (str: string): string {
+    <Ctrl-A>
+}
 ```
 
 ```
-// Calculate hashcode from a string<Ctrl-A>
+// Calculate hashcode from a string
+<Ctrl-A>
 ```
 
 ```
-List of planets in Star Wars:<Ctrl-A>
+Hey Joe, here are some ideas for slogans for the new petshop:
+1. <Ctrl-A>
 ```
 
 ```
-Here are some ideas for slogans for the new petshop:<Ctrl-A>
+The national bird of Brazil is <Ctrl-A>
 ```
 
 ### Generating
