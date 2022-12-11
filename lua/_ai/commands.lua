@@ -47,18 +47,7 @@ function M.ai (args)
         -- virt_text = {{"🤖", nil}},
     })
 
-    local function on_result (result)
-        local text = result.choices[1].text
-        local lines = {}
-        for line in text:gmatch("[^\n]+") do
-            table.insert(lines, line)
-        end
-
-        -- -- Special case: prepend \n if we're dealing with a multi-line response
-        -- if #lines > 1 then
-        --     table.insert(lines, 1, "")
-        -- end
-
+    local function on_result (err, result)
         local mark = vim.api.nvim_buf_get_extmark_by_id(buffer, ns_id, mark_id, { details = true })
         local start_row = mark[1]
         local start_col = mark[2]
@@ -67,7 +56,22 @@ function M.ai (args)
 
         vim.api.nvim_buf_del_extmark(buffer, ns_id, mark_id)
 
-        vim.api.nvim_buf_set_text(buffer, start_row, start_col, end_row, end_col, lines)
+        if err then
+            vim.api.nvim_err_writeln("ai.vim: " .. err)
+        else
+            local text = result.choices[1].text
+            local lines = {}
+            for line in text:gmatch("[^\n]+") do
+                table.insert(lines, line)
+            end
+
+            -- -- Special case: prepend \n if we're dealing with a multi-line response
+            -- if #lines > 1 then
+            --     table.insert(lines, 1, "")
+            -- end
+
+            vim.api.nvim_buf_set_text(buffer, start_row, start_col, end_row, end_col, lines)
+        end
     end
 
     if visual_mode then
