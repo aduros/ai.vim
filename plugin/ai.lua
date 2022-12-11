@@ -5,10 +5,12 @@ end, {
     nargs = "*",
 })
 
-vim.api.nvim_set_keymap("n", "<C-a>", ":AI ", { noremap = true })
-vim.api.nvim_set_keymap("v", "<C-a>", ":AI ", { noremap = true })
-vim.api.nvim_set_keymap("i", "<C-a>", "<Esc>:AI<CR>a", { noremap = true })
+vim.api.nvim_set_var("ai_sign_text", "🤖")
+vim.api.nvim_set_var("ai_context_before", 20)
+vim.api.nvim_set_var("ai_context_after", 20)
 
--- vim.api.nvim_set_hl(0, "AIWaiting", {
---     ctermbg = 8,
--- })
+if not vim.g.ai_no_mappings then
+    vim.api.nvim_set_keymap("n", "<C-a>", ":AI ", { noremap = true })
+    vim.api.nvim_set_keymap("v", "<C-a>", ":AI ", { noremap = true })
+    vim.api.nvim_set_keymap("i", "<C-a>", "<Esc>:AI<CR>a", { noremap = true })
+end

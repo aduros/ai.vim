@@ -1,0 +1,111 @@
+*ai.txt* Plugin for generating and editing text using OpenAI and GPT.
+
+Author: Bruno Garcia <https://github.com/aduros/ai.vim>
+
+==============================================================================
+INTRODUCTION
+
+*ai.vim* exposes OpenAI's powerful language processing model to Neovim in a
+flexible but easy to use plugin.
+
+You'll need an OpenAI account and to generate an API key here:
+
+        https://beta.openai.com/account/api-keys
+
+Then set the `$OPEN_AI_API_KEY` environment variable, for example, by adding
+it to your `~/.profile`:
+
+        `export OPENAI_API_KEY="sk-abcdefghijklmnopqrstuvwxyz1234567890"`
+
+==============================================================================
+USAGE
+
+The *:AI* command is your point of entry to ai.vim. With it you can generate
+text using a prompt, complete text at the current position, or edit existing
+text in-place.
+
+There is a recommended mapping of *<CTRL-A>* in normal, visual, and insert
+modes. This mapping can be disabled by setting *g:ai_no_mappings* to 1.
+
+There are 4 different behaviors for :AI based on whether arguments are
+supplied or text is visually selected.
+
+:AI {generator prompt}
+
+        Generate some text using the supplied prompt and insert it at the
+        cursor position.
+
+        Example:
+
+            :AI write an email to IT asking for a replacement laptop
+
+:AI
+
+        When no prompt is supplied, contextually complete some text to insert
+        at the cursor position.
+
+        Example:
+
+            function capitalize (str: string): string {
+                `(Press <Ctrl-A> here)`
+            }
+
+(with visual selection) :AI {edit instruction}
+
+        With some text visually selected, edit it in-place using the given
+        edit instruction.
+
+        Example:
+
+            List of capitals:
+            1. Toronto
+            2. London
+            3. Honolulu
+            4. Miami
+            5. Boston
+
+            `(Visual select)` :AI sort by population
+
+(with visual selection) :AI
+
+        When no edit instruction is supplied, use the selected text as a
+        generator prompt. The generated text will replace the selected text.
+
+        Example:
+
+            Write an academic essay exploring the pros and cons of yodeling as
+            a career choice.
+
+            `(Visual select)` :AI
+
+==============================================================================
+CUSTOMIZING
+
+*g:ai_context_before* (default: 20)
+
+        When using |:AI| for contextual completion, how many additional lines
+        of text before the cursor to include in the request.
+
+        Example: `let g:ai_context_before=50`
+
+*g:ai_context_after* (default: 20)
+
+        When using |:AI| for contextual completion, how many additional lines
+        of text after the cursor to include in the request.
+
+        Example: `let g:ai_context_after=50`
+
+*g:ai_sign_text* (default: "🤖")
+
+        The gutter sign text used to indicate a request in-progress. If your
+        terminal can't display emojis, you'll probably want to set this.
+
+        Example: `let g:ai_sign_text="A"`
+
+*AISign* is the |:highlight| group to color the gutter sign text.
+
+        Example: `:highlight AISign ctermbg=red`
+
+*AIHighlight* is the |:highlight| group to color the text being processed.
+
+        Example: `:highlight AIHighlight ctermbg=green`

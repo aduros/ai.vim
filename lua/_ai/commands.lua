@@ -41,8 +41,10 @@ function M.ai (args)
     local mark_id = vim.api.nvim_buf_set_extmark(buffer, ns_id, start_row, start_col, {
         end_row = end_row,
         end_col = end_col,
-        -- hl_group = "AIWaiting",
-        sign_text = "🤖",
+        hl_group = "AIHighlight",
+        sign_text = vim.api.nvim_get_var("ai_sign_text"),
+        sign_hl_group = "AISign",
+        -- virt_text = {{"🤖", nil}},
     })
 
     local function on_result (result)
@@ -79,6 +81,7 @@ function M.ai (args)
                 temperature = 0,
             }, on_result)
         else
+            -- Edit selected text
             openai.call("edits", {
                 model = "code-davinci-edit-001",
                 input = selected_text,
@@ -89,11 +92,11 @@ function M.ai (args)
     else
         if prompt == "" then
             -- Insert some text generated using surrounding context
-            local context_before = 20
+            local context_before = vim.api.nvim_get_var("ai_context_before")
             local prefix = table.concat(vim.api.nvim_buf_get_text(buffer,
                 math.max(0, start_row-context_before), 0, start_row, start_col, {}), "\n")
 
-            local context_after = 20
+            local context_after = vim.api.nvim_get_var("ai_context_after")
             local line_count = vim.api.nvim_buf_line_count(buffer)
             local suffix = table.concat(vim.api.nvim_buf_get_text(buffer,
                 end_row, end_col, math.min(end_row+context_after, line_count-1), 99999999, {}), "\n")
