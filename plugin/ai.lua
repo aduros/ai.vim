@@ -5,10 +5,6 @@ end, {
     nargs = "*",
 })
 
-vim.api.nvim_set_var("ai_sign_text", "🤖")
-vim.api.nvim_set_var("ai_context_before", 20)
-vim.api.nvim_set_var("ai_context_after", 20)
-
 if not vim.g.ai_no_mappings then
     vim.api.nvim_set_keymap("n", "<C-a>", ":AI ", { noremap = true })
     vim.api.nvim_set_keymap("v", "<C-a>", ":AI ", { noremap = true })

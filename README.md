@@ -8,7 +8,7 @@ A minimalist Neovim plugin for generating and editing text using OpenAI and GPT.
 - Generate new text using a prompt.
 - Select and edit existing text in-place.
 - Easy to use interface. Just hit `<Ctrl-A>` or run `:AI <prompt>`.
-- Not just for source code.
+- Works with both source code and regular text.
 
 ## Installing
 
@@ -23,9 +23,9 @@ here](https://beta.openai.com/account/api-keys). You'll also need `curl` install
 
 To see the full help and customization options, run `:help ai.vim`.
 
-## Usage
+## Tutorial
 
-The most basic usage is contextual completion, by pressing `<Ctrl-A>` in insert mode.
+The most basic use-case is completion, by pressing `<Ctrl-A>` in insert mode.
 
 For example:
 
@@ -61,8 +61,8 @@ Hey Joe, here are some ideas for slogans for the new petshop. Which do you like 
 5. "The Pet Store That Loves Your Pet!"
 ```
 
-You can also generate some text by pressing `<Ctrl-A>` in normal mode and providing some text as a
-prompt. For example:
+You can also generate some text by pressing `<Ctrl-A>` in normal mode and providing a prompt. For
+example:
 
 ```
 :AI write a thank you email to Bigco engineering interviewer
@@ -86,7 +86,7 @@ Sincerely,
 [Your Name]
 ```
 
-Besides insertion, you can also edit text using a given instruction.
+Besides generating new text, you can also edit existing text using a given instruction.
 
 ```css
 body {
@@ -126,10 +126,30 @@ List of capitals:
 5. Honolulu
 ```
 
+You can build your own shortcuts for long and complex prompts. For example:
+
+```vim
+vnoremap <silent> <leader>f :AI fix grammar and spelling and replace slang and contractions with a formal academic writing style<CR>
+```
+
+With this custom mapping you can select text that looks like this:
+
+```
+Me fail English? That's unpossible!
+```
+
+And by pressing `<leader>f` transform it into this:
+
+```
+I failed English? That is impossible!
+```
+
+If you come up with any exciting ways to use ai.vim, please share what you find!
+
 ## Important Disclaimers
 
-*Accuracy*: GPT is good at producing text and code that looks correct at first glance, but may be
+**Accuracy**: GPT is good at producing text and code that looks correct at first glance, but may be
 completely wrong. Make sure you carefully proof read and test everything output by this plugin!
 
-*Privacy*: This plugin sends text to OpenAI when generating completions and edits. Don't use it in
+**Privacy**: This plugin sends text to OpenAI when generating completions and edits. Don't use it in
 files containing sensitive information.

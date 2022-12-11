@@ -1,6 +1,6 @@
 local M = {}
 
-function exec (cmd, args, on_result)
+local function exec (cmd, args, on_result)
     local stdout = vim.loop.new_pipe()
     local stdout_chunks = {}
     local function on_stdout_read (err, data)
