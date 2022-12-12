@@ -4,6 +4,9 @@ local openai = require("_ai/openai")
 
 local ns_id = vim.api.nvim_create_namespace("")
 
+---@param name string
+---@param default_value unknown
+---@return unknown
 local function get_var (name, default_value)
     local value = vim.g[name]
     if value == nil then
@@ -12,6 +15,7 @@ local function get_var (name, default_value)
     return value
 end
 
+---@param args { args: string, range: integer }
 function M.ai (args)
     local prompt = args.args
     local visual_mode = args.range > 0

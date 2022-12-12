@@ -1,9 +1,12 @@
 local M = {}
 
+---@param cmd string
+---@param args string[]
+---@param on_result fun(err: string?, output: string?)
 local function exec (cmd, args, on_result)
     local stdout = vim.loop.new_pipe()
     local stdout_chunks = {}
-    local function on_stdout_read (err, data)
+    local function on_stdout_read (_, data)
         if data then
             table.insert(stdout_chunks, data)
         end
@@ -11,7 +14,7 @@ local function exec (cmd, args, on_result)
 
     local stderr = vim.loop.new_pipe()
     local stderr_chunks = {}
-    local function on_stderr_read (err, data)
+    local function on_stderr_read (_, data)
         if data then
             table.insert(stderr_chunks, data)
         end
@@ -24,7 +27,7 @@ local function exec (cmd, args, on_result)
     handle, error = vim.loop.spawn(cmd, {
         args = args,
         stdio = {nil, stdout, stderr},
-    }, function (code, signal)
+    }, function (code)
         stdout:close()
         stderr:close()
         handle:close()
@@ -47,6 +50,9 @@ local function exec (cmd, args, on_result)
     end
 end
 
+---@param endpoint string
+---@param body table
+---@param on_result fun(err: string?, output: unknown?): nil
 function M.call (endpoint, body, on_result)
     local api_key = os.getenv("OPENAI_API_KEY")
     if not api_key then
