@@ -102,6 +102,19 @@ CUSTOMIZING
 
         Example: `let g:ai_sign_text="A"`
 
+*g:ai_model* (default: "text-davinci-003")
+
+        The model used for text completion.
+
+        Example: `let g:ai_sign_text="code-davinci-002"`
+
+*g:ai_edit_model* (default: "text-davinci-edit-001")
+
+        The model used for text editing.
+
+        Example: `let g:ai_sign_text="code-davinci-edit-001"`
+
+
 *AISign* is the |:highlight| group to color the gutter sign text.
 
         Example: `:highlight AISign ctermbg=red`

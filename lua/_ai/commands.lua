@@ -88,10 +88,13 @@ function M.ai (args)
 
     if visual_mode then
         local selected_text = table.concat(vim.api.nvim_buf_get_text(buffer, start_row, start_col, end_row, end_col, {}), "\n")
+        local model = get_var("ai_model", "text-davinci-003")
+        local edit_model = get_var("ai_edit_model", "text-davinci-edit-001")
+
         if prompt == "" then
             -- Replace the selected text, also using it as a prompt
             openai.call("completions", {
-                model = "text-davinci-003",
+                model = model,
                 prompt = selected_text,
                 max_tokens = 2048,
                 temperature = 0,
@@ -99,7 +102,7 @@ function M.ai (args)
         else
             -- Edit selected text
             openai.call("edits", {
-                model = "text-davinci-edit-001",
+                model = edit_model,
                 input = selected_text,
                 instruction = prompt,
                 temperature = 0,
@@ -118,7 +121,7 @@ function M.ai (args)
                 end_row, end_col, math.min(end_row+context_after, line_count-1), 99999999, {}), "\n")
 
             openai.call("completions", {
-                model = "text-davinci-003",
+                model = model,
                 prompt = prefix,
                 suffix = suffix,
                 max_tokens = 2048,
@@ -127,7 +130,7 @@ function M.ai (args)
         else
             -- Insert some text generated using the given prompt
             openai.call("completions", {
-                model = "text-davinci-003",
+                model = model,
                 prompt = prompt,
                 max_tokens = 2048,
                 temperature = 0,
