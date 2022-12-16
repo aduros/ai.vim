@@ -1,0 +1,19 @@
+name: Test
+
+on: [push]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Install lua-language-server
+              run: |
+                  lls_dir=`mktemp -d`
+                  gh release download -R sumneko/lua-language-server -p '*-linux-x64.tar.gz' -D "$lls_dir"
+                  tar xzf "$lls_dir"/* -C "$lls_dir"
+                  echo "$lls_dir/bin" >> $GITHUB_PATH
+
+            - name: Run tests
+              run: ./test.sh
