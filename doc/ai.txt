@@ -81,6 +81,29 @@ supplied or text is visually selected.
 ==============================================================================
 CUSTOMIZING
 
+*g:ai_completions_model* (default: "text-davinci-003")
+
+        The model to use for completions.
+
+        For more info, see https://beta.openai.com/docs/models/overview
+
+        Example: `let g:ai_completions_model="text-ada-001"`
+
+*g:ai_edits_model* (default: "text-davinci-edit-001")
+
+        The model to use for edits.
+
+        For more info, see https://beta.openai.com/docs/models/overview
+
+        Example: `let g:ai_completions_model="code-davinci-edit-001"`
+
+*g:ai_temperature* (default: 0)
+
+        Controls randomness of output, between 0 and 1. Lower values will be
+        more deterministic and higher values will take more creative risks.
+
+        Example: `let g:ai_temperature=0.7`
+
 *g:ai_context_before* (default: 20)
 
         When using |:AI| for contextual completion, how many additional lines

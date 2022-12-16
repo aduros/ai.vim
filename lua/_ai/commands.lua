@@ -59,6 +59,10 @@ function M.ai (args)
         -- virt_text = {{"🤖", nil}},
     })
 
+    local completions_model = get_var("ai_completions_model", "text-davinci-003")
+    local edits_model = get_var("ai_edits_model", "text-davinci-edit-001")
+    local temperature = get_var("ai_temperature", 0)
+
     local function on_result (err, result)
         local mark = vim.api.nvim_buf_get_extmark_by_id(buffer, ns_id, mark_id, { details = true })
         local start_row = mark[1]
@@ -91,18 +95,18 @@ function M.ai (args)
         if prompt == "" then
             -- Replace the selected text, also using it as a prompt
             openai.call("completions", {
-                model = "text-davinci-003",
+                model = completions_model,
                 prompt = selected_text,
                 max_tokens = 2048,
-                temperature = 0,
+                temperature = temperature,
             }, on_result)
         else
             -- Edit selected text
             openai.call("edits", {
-                model = "text-davinci-edit-001",
+                model = edits_model,
                 input = selected_text,
                 instruction = prompt,
-                temperature = 0,
+                temperature = temperature,
             }, on_result)
         end
     else
@@ -118,19 +122,19 @@ function M.ai (args)
                 end_row, end_col, math.min(end_row+context_after, line_count-1), 99999999, {}), "\n")
 
             openai.call("completions", {
-                model = "text-davinci-003",
+                model = completions_model,
                 prompt = prefix,
                 suffix = suffix,
                 max_tokens = 2048,
-                temperature = 0,
+                temperature = temperature,
             }, on_result)
         else
             -- Insert some text generated using the given prompt
             openai.call("completions", {
-                model = "text-davinci-003",
+                model = completions_model,
                 prompt = prompt,
                 max_tokens = 2048,
-                temperature = 0,
+                temperature = temperature,
             }, on_result)
         end
     end
