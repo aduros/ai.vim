@@ -34,10 +34,9 @@ local function exec (cmd, args, on_result)
 
         vim.schedule(function ()
             if code ~= 0 then
-                -- Lop off the trailing newline character
-                on_result(table.concat(stderr_chunks, ""):sub(0, -2))
+                on_result(vim.trim(table.concat(stderr_chunks, "")))
             else
-                on_result(nil, table.concat(stdout_chunks, ""))
+                on_result(nil, vim.trim(table.concat(stdout_chunks, "")))
             end
         end)
     end)
