@@ -118,16 +118,26 @@ CUSTOMIZING
 
         Example: `let g:ai_context_after=50`
 
-*g:ai_sign_text* (default: "🤖")
+*g:ai_indicator_style* (default: "sign")
 
-        The gutter sign text used to indicate a request in-progress. If your
-        terminal can't display emojis, you'll probably want to set this.
+        Controls where the progress indicator is displayed. Allowed values:
 
-        Example: `let g:ai_sign_text="A"`
+            - `sign`: Display indicator in the sign column.
+            - `virtual_text`: Display indicator as virtual text.
+            - `none`: Don't display any indicator.
 
-*AISign* is the |:highlight| group to color the gutter sign text.
+        Example: `let g:ai_indicator_style="virtual_text"`
 
-        Example: `:highlight AISign ctermbg=red`
+*g:ai_indicator_text* (default: "🤖")
+
+        The text used to indicate a request in-progress. If your terminal can't
+        display emojis, you'll probably want to set this.
+
+        Example: `let g:ai_indicator_text="A"`
+
+*AIIndicator* is the |:highlight| group to color the indicator text.
+
+        Example: `:highlight AIIndicator ctermbg=red`
 
 *AIHighlight* is the |:highlight| group to color the text being processed.
 

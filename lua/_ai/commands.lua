@@ -50,14 +50,24 @@ function M.ai (args)
     local end_line_length = vim.api.nvim_buf_get_lines(buffer, end_row, end_row+1, true)[1]:len()
     end_col = math.min(end_col, end_line_length)
 
-    local mark_id = vim.api.nvim_buf_set_extmark(buffer, ns_id, start_row, start_col, {
+    local indicator_style = get_var("ai_indicator_style", "sign")
+    local indicator_text = get_var("ai_indicator_text", "🤖")
+    local extmark_opts = {
         end_row = end_row,
         end_col = end_col,
         hl_group = "AIHighlight",
-        sign_text = get_var("ai_sign_text", "🤖"),
-        sign_hl_group = "AISign",
-        -- virt_text = {{"🤖", nil}},
-    })
+    }
+    if indicator_style == "sign" then
+        extmark_opts.sign_text = indicator_text
+        extmark_opts.sign_hl_group = "AIIndicator"
+    elseif indicator_style == "virtual_text" then
+        extmark_opts.virt_text = {{ indicator_text, "AIIndicator" }}
+    elseif indicator_style ~= "none" then
+        vim.api.nvim_err_writeln("ai.vim: Unsupported value for g:ai_indicator_style")
+        return
+    end
+
+    local mark_id = vim.api.nvim_buf_set_extmark(buffer, ns_id, start_row, start_col, extmark_opts)
 
     local completions_model = get_var("ai_completions_model", "text-davinci-003")
     local edits_model = get_var("ai_edits_model", "text-davinci-edit-001")
