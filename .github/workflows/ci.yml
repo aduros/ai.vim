@@ -14,6 +14,8 @@ jobs:
                   gh release download -R sumneko/lua-language-server -p '*-linux-x64.tar.gz' -D "$lls_dir"
                   tar xzf "$lls_dir"/* -C "$lls_dir"
                   echo "$lls_dir/bin" >> $GITHUB_PATH
+              env:
+                  GH_TOKEN: ${{ github.token }}
 
             - name: Run tests
               run: ./test.sh
