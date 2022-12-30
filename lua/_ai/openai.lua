@@ -1,5 +1,7 @@
 local M = {}
 
+local config = require('_ai/config')
+
 ---@param cmd string
 ---@param args string[]
 ---@param on_result fun(err: string?, output: string?)
@@ -62,6 +64,7 @@ function M.call (endpoint, body, on_result)
     local curl_args = {
         "-X", "POST", "--silent", "--show-error",
         "-L", "https://api.openai.com/v1/" .. endpoint,
+        "-m", config.timeout,
         "-H", "Content-Type: application/json",
         "-H", "Authorization: Bearer " .. api_key,
         "-d", vim.json.encode(body),
