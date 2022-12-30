@@ -135,6 +135,12 @@ CUSTOMIZING
 
         Example: `let g:ai_indicator_text="A"`
 
+*g:ai_timeout* (default: 10)
+
+        Set the maximum time to wait for the operation to complete.
+
+        Example: `let g:ai_timeout=20`
+
 *AIIndicator* is the |:highlight| group to color the indicator text.
 
         Example: `:highlight AIIndicator ctermbg=red`
