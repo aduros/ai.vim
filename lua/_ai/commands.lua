@@ -1,19 +1,9 @@
 local M = {}
 
 local openai = require("_ai/openai")
+local config = require('_ai/config')
 
 local ns_id = vim.api.nvim_create_namespace("")
-
----@param name string
----@param default_value unknown
----@return unknown
-local function get_var (name, default_value)
-    local value = vim.g[name]
-    if value == nil then
-        return default_value
-    end
-    return value
-end
 
 ---@param args { args: string, range: integer }
 function M.ai (args)
@@ -50,28 +40,22 @@ function M.ai (args)
     local end_line_length = vim.api.nvim_buf_get_lines(buffer, end_row, end_row+1, true)[1]:len()
     end_col = math.min(end_col, end_line_length)
 
-    local indicator_style = get_var("ai_indicator_style", "sign")
-    local indicator_text = get_var("ai_indicator_text", "🤖")
     local extmark_opts = {
         end_row = end_row,
         end_col = end_col,
         hl_group = "AIHighlight",
     }
-    if indicator_style == "sign" then
-        extmark_opts.sign_text = indicator_text
+    if config.indicator_style == "sign" then
+        extmark_opts.sign_text = config.indicator_text
         extmark_opts.sign_hl_group = "AIIndicator"
-    elseif indicator_style == "virtual_text" then
-        extmark_opts.virt_text = {{ indicator_text, "AIIndicator" }}
-    elseif indicator_style ~= "none" then
+    elseif config.indicator_style == "virtual_text" then
+        extmark_opts.virt_text = {{ config.indicator_text, "AIIndicator" }}
+    elseif config.indicator_style ~= "none" then
         vim.api.nvim_err_writeln("ai.vim: Unsupported value for g:ai_indicator_style")
         return
     end
 
     local mark_id = vim.api.nvim_buf_set_extmark(buffer, ns_id, start_row, start_col, extmark_opts)
-
-    local completions_model = get_var("ai_completions_model", "text-davinci-003")
-    local edits_model = get_var("ai_edits_model", "text-davinci-edit-001")
-    local temperature = get_var("ai_temperature", 0)
 
     local function on_result (err, result)
         local mark = vim.api.nvim_buf_get_extmark_by_id(buffer, ns_id, mark_id, { details = true })
@@ -105,46 +89,44 @@ function M.ai (args)
         if prompt == "" then
             -- Replace the selected text, also using it as a prompt
             openai.call("completions", {
-                model = completions_model,
+                model = config.completions_model,
                 prompt = selected_text,
                 max_tokens = 2048,
-                temperature = temperature,
+                temperature = config.temperature,
             }, on_result)
         else
             -- Edit selected text
             openai.call("edits", {
-                model = edits_model,
+                model = config.edits_model,
                 input = selected_text,
                 instruction = prompt,
-                temperature = temperature,
+                temperature = config.temperature,
             }, on_result)
         end
     else
         if prompt == "" then
             -- Insert some text generated using surrounding context
-            local context_before = get_var("ai_context_before", 20)
             local prefix = table.concat(vim.api.nvim_buf_get_text(buffer,
-                math.max(0, start_row-context_before), 0, start_row, start_col, {}), "\n")
+                math.max(0, start_row-config.context_before), 0, start_row, start_col, {}), "\n")
 
-            local context_after = get_var("ai_context_after", 20)
             local line_count = vim.api.nvim_buf_line_count(buffer)
             local suffix = table.concat(vim.api.nvim_buf_get_text(buffer,
-                end_row, end_col, math.min(end_row+context_after, line_count-1), 99999999, {}), "\n")
+                end_row, end_col, math.min(end_row+config.context_after, line_count-1), 99999999, {}), "\n")
 
             openai.call("completions", {
-                model = completions_model,
+                model = config.completions_model,
                 prompt = prefix,
                 suffix = suffix,
                 max_tokens = 2048,
-                temperature = temperature,
+                temperature = config.temperature,
             }, on_result)
         else
             -- Insert some text generated using the given prompt
             openai.call("completions", {
-                model = completions_model,
+                model = config.completions_model,
                 prompt = prompt,
                 max_tokens = 2048,
-                temperature = temperature,
+                temperature = config.temperature,
             }, on_result)
         end
     end
