@@ -71,7 +71,7 @@ function M.ai (args)
         else
             local text = result.choices[1].text
             local lines = {}
-            for line in text:gmatch("[^\n]+") do
+            for line in text:gmatch("([^\n]*)\n?") do
                 table.insert(lines, line)
             end
 
