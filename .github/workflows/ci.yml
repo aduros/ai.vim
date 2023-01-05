@@ -18,4 +18,4 @@ jobs:
                   GH_TOKEN: ${{ github.token }}
 
             - name: Run tests
-              run: ./test.sh
+              run: ./scripts/test
