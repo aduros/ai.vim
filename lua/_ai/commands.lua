@@ -70,6 +70,9 @@ function M.ai (args)
             vim.api.nvim_err_writeln("ai.vim: " .. err)
         else
             local text = result.choices[1].text
+            if result.model and string.find(result.model, "gpt-3.5-turbo", 1, true) then
+                text = result.choices[1].message.content
+            end
             local lines = {}
             for line in text:gmatch("([^\n]*)\n?") do
                 table.insert(lines, line)

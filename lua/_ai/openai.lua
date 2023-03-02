@@ -55,6 +55,17 @@ end
 ---@param body table
 ---@param on_result fun(err: string?, output: unknown?): nil
 function M.call (endpoint, body, on_result)
+    if body.model == "gpt-3.5-turbo" then
+        endpoint = "chat/completions"
+        body.messages = {
+            [1] = {
+                role = "user",
+                content = body.prompt,
+            },
+        }
+        body.prompt = nil
+        body.suffix = nil
+    end
     local api_key = os.getenv("OPENAI_API_KEY")
     if not api_key then
         on_result("$OPENAI_API_KEY environment variable must be set")
