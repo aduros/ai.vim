@@ -24,14 +24,22 @@ function M.ai (args)
         local end_pos = vim.api.nvim_buf_get_mark(buffer, ">")
         end_row = end_pos[1] - 1
         local line = vim.fn.getline(end_pos[1])
-        end_col = vim.fn.byteidx(line, vim.fn.charcol("'>"))
+        if line == "" then
+            end_col = 0
+        else
+            end_col = vim.fn.byteidx(line, vim.fn.charcol("'>"))
+        end
 
     else
         -- Use the cursor position
         local start_pos = vim.api.nvim_win_get_cursor(0)
         start_row = start_pos[1] - 1
         local line = vim.fn.getline(start_pos[1])
-        start_col = vim.fn.byteidx(line, vim.fn.charcol("."))
+        if line == "" then
+            start_col = 0
+        else
+            start_col = vim.fn.byteidx(line, vim.fn.charcol("."))
+        end
         end_row = start_row
         end_col = start_col
     end
