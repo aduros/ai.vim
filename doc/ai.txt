@@ -95,7 +95,7 @@ CUSTOMIZING
 
         For more info, see https://beta.openai.com/docs/models/overview
 
-        Example: `let g:ai_completions_model="code-davinci-edit-001"`
+        Example: `let g:ai_edits_model="code-davinci-edit-001"`
 
 *g:ai_temperature* (default: 0)
 
