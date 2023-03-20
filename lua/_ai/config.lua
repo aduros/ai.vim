@@ -19,6 +19,6 @@ M.edits_model = get_var("ai_edits_model", "text-davinci-edit-001")
 M.temperature = get_var("ai_temperature", 0)
 M.context_before = get_var("ai_context_before", 20)
 M.context_after = get_var("ai_context_after", 20)
-M.timeout = get_var("ai_timeout", 10)
+M.timeout = get_var("ai_timeout", 60)
 
 return M

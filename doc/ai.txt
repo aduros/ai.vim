@@ -134,9 +134,9 @@ CUSTOMIZING
 
         Example: `let g:ai_indicator_text="A"`
 
-*g:ai_timeout* (default: 10)
+*g:ai_timeout* (default: 60)
 
-        Set the maximum time to wait for the operation to complete.
+        Set the maximum time in seconds to wait for OpenAI requests.
 
         Example: `let g:ai_timeout=20`
 
