@@ -1,9 +1,8 @@
 local M = {}
 
 local openai = require("_ai/openai")
-local config = require('_ai/config')
-
-local ns_id = vim.api.nvim_create_namespace("")
+local config = require("_ai/config")
+local indicator = require("_ai/indicator")
 
 ---@param args { args: string, range: integer }
 function M.ai (args)
@@ -50,71 +49,36 @@ function M.ai (args)
     local end_line_length = vim.api.nvim_buf_get_lines(buffer, end_row, end_row+1, true)[1]:len()
     end_col = math.min(end_col, end_line_length)
 
-    local extmark_opts = {
-        end_row = end_row,
-        end_col = end_col,
-        hl_group = "AIHighlight",
-    }
-    if config.indicator_style == "sign" then
-        extmark_opts.sign_text = config.indicator_text
-        extmark_opts.sign_hl_group = "AIIndicator"
-    elseif config.indicator_style == "virtual_text" then
-        extmark_opts.virt_text = {{ config.indicator_text, "AIIndicator" }}
-    elseif config.indicator_style ~= "none" then
-        vim.api.nvim_err_writeln("ai.vim: Unsupported value for g:ai_indicator_style")
-        return
+    local indicator_obj = indicator.create(buffer, start_row, start_col, end_row, end_col)
+    local accumulated_text = ""
+
+    local function on_data (data)
+        accumulated_text = accumulated_text .. data.choices[1].text
+        indicator.set_preview_text(indicator_obj, accumulated_text)
     end
 
-    local mark_id = vim.api.nvim_buf_set_extmark(buffer, ns_id, start_row, start_col, extmark_opts)
-
-    local function on_result (err, result)
-        local mark = vim.api.nvim_buf_get_extmark_by_id(buffer, ns_id, mark_id, { details = true })
-        local start_row = mark[1]
-        local start_col = mark[2]
-        local end_row = mark[3].end_row
-        local end_col = mark[3].end_col
-
-        vim.api.nvim_buf_del_extmark(buffer, ns_id, mark_id)
-
+    local function on_complete (err)
         if err then
             vim.api.nvim_err_writeln("ai.vim: " .. err)
         else
-            local text = result.choices[1].text
-            if result.model and string.find(result.model, "gpt-3.5-turbo", 1, true) then
-                text = result.choices[1].message.content
-            end
-            local lines = {}
-            for line in text:gmatch("([^\n]*)\n?") do
-                table.insert(lines, line)
-            end
-
-            -- -- Special case: prepend \n if we're dealing with a multi-line response
-            -- if #lines > 1 then
-            --     table.insert(lines, 1, "")
-            -- end
-
-            vim.api.nvim_buf_set_text(buffer, start_row, start_col, end_row, end_col, lines)
+            indicator.set_buffer_text(indicator_obj, accumulated_text)
         end
+        indicator.finish(indicator_obj)
     end
 
     if visual_mode then
         local selected_text = table.concat(vim.api.nvim_buf_get_text(buffer, start_row, start_col, end_row, end_col, {}), "\n")
         if prompt == "" then
             -- Replace the selected text, also using it as a prompt
-            openai.call("completions", {
-                model = config.completions_model,
+            openai.completions({
                 prompt = selected_text,
-                max_tokens = 2048,
-                temperature = config.temperature,
-            }, on_result)
+            }, on_data, on_complete)
         else
             -- Edit selected text
-            openai.call("edits", {
-                model = config.edits_model,
+            openai.edits({
                 input = selected_text,
                 instruction = prompt,
-                temperature = config.temperature,
-            }, on_result)
+            }, on_data, on_complete)
         end
     else
         if prompt == "" then
@@ -126,21 +90,15 @@ function M.ai (args)
             local suffix = table.concat(vim.api.nvim_buf_get_text(buffer,
                 end_row, end_col, math.min(end_row+config.context_after, line_count-1), 99999999, {}), "\n")
 
-            openai.call("completions", {
-                model = config.completions_model,
+            openai.completions({
                 prompt = prefix,
                 suffix = suffix,
-                max_tokens = 2048,
-                temperature = config.temperature,
-            }, on_result)
+            }, on_data, on_complete)
         else
             -- Insert some text generated using the given prompt
-            openai.call("completions", {
-                model = config.completions_model,
+            openai.completions({
                 prompt = prompt,
-                max_tokens = 2048,
-                temperature = config.temperature,
-            }, on_result)
+            }, on_data, on_complete)
         end
     end
 end

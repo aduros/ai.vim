@@ -7,6 +7,7 @@ A minimalist Neovim plugin for generating and editing text using OpenAI and GPT.
 - Complete text in insert mode.
 - Generate new text using a prompt.
 - Select and edit existing text in-place.
+- Streaming support for completions.
 - Easy to use interface. Just hit `<Ctrl-A>` or run `:AI <prompt>`.
 - Works with both source code and regular text.
 

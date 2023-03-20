@@ -123,10 +123,9 @@ CUSTOMIZING
         Controls where the progress indicator is displayed. Allowed values:
 
             - `sign`: Display indicator in the sign column.
-            - `virtual_text`: Display indicator as virtual text.
             - `none`: Don't display any indicator.
 
-        Example: `let g:ai_indicator_style="virtual_text"`
+        Example: `let g:ai_indicator_style="none"`
 
 *g:ai_indicator_text* (default: "🤖")
 
