@@ -27,6 +27,7 @@ local function request (endpoint, body, on_data, on_complete)
         on_complete(json.error.message)
     else
         on_data(json)
+        on_complete()
     end
 end
 
@@ -38,7 +39,6 @@ function M.completions (body, on_data, on_complete)
         model = config.completions_model,
         max_tokens = 2048,
         temperature = config.temperature,
-        stream = true,
     })
     request("completions", body, on_data, on_complete)
 end
