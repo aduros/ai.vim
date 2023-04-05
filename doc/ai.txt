@@ -12,7 +12,7 @@ You'll need an OpenAI account and to generate an API key here:
 
         https://beta.openai.com/account/api-keys
 
-Then set the `$OPEN_AI_API_KEY` environment variable, for example, by adding
+Then set the `$OPENAI_API_KEY` environment variable, for example, by adding
 it to your `~/.profile`:
 
         `export OPENAI_API_KEY="sk-abcdefghijklmnopqrstuvwxyz1234567890"`
