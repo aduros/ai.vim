@@ -60,7 +60,7 @@ function M.ai (args)
     local function on_complete (err)
         if err then
             vim.api.nvim_err_writeln("ai.vim: " .. err)
-        else
+        elseif #accumulated_text > 0 then
             indicator.set_buffer_text(indicator_obj, accumulated_text)
         end
         indicator.finish(indicator_obj)
