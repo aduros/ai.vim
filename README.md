@@ -24,6 +24,18 @@ here](https://beta.openai.com/account/api-keys). You'll also need `curl` install
 
 To see the full help and customization options, run `:help ai.vim`.
 
+## Configuring
+
+These plugin only register the `AI` command, it let full control to you over your keymaps.
+Here are some recomendations
+
+```lua
+vim.api.nvim_set_keymap("n", "<C-a>", ":AI ", { noremap = true })
+vim.api.nvim_set_keymap("v", "<C-a>", ":AI ", { noremap = true })
+vim.api.nvim_set_keymap("i", "<C-a>", "<Esc>:AI<CR>a", { noremap = true })
+```
+
+
 ## Tutorial
 
 The most basic use-case is completion, by pressing `<Ctrl-A>` in insert mode.
